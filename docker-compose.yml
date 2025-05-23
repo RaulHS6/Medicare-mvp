@@ -1,0 +1,50 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  auth-service:
+    build: ./backend/auth-service
+    container_name: medicare-auth-service
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./backend/auth-service/.env
+    depends_on:
+      - db
+
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: medicare-api-gateway
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./backend/api-gateway/.env
+    depends_on:
+      - auth-service
+
+  frontend:
+    build: ./frontend/medicare-frontend
+    container_name: medicare-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/medicare-frontend:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  db:
+    image: postgres:15
+    container_name: medicare-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: medicare_auth
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./backend/auth-service/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+volumes:
+  db_data:
