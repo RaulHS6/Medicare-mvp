@@ -3,12 +3,11 @@ FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+RUN npm install -g vite
 COPY . .
-RUN npm run build
+RUN vite build
 
-FROM node:18-alpine AS prod
-WORKDIR /app
-RUN npm install -g serve
-COPY --from=build /app/dist ./dist
+FROM nginx:alpine AS prod
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 5173
-CMD ["serve", "-s", "dist", "-l", "5173"]
+CMD ["nginx", "-g", "daemon off;"]
