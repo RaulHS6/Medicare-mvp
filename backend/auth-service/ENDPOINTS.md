@@ -166,6 +166,21 @@ Verifica que el servicio está activo.
 **Roles permitidos:**  
 - Todos
 
+## Validar existencia de usuario por ID (interno)
+
+- **URL:** `/api/auth/internal/user-exists/:id`
+- **Método:** GET
+- **Descripción:** Verifica si existe un usuario con el ID proporcionado. Pensado para uso interno entre microservicios.
+- **Parámetros de ruta:**
+  - `id` (number): ID del usuario a verificar.
+- **Respuesta exitosa:**
+  - Código: 200
+  - Cuerpo:
+    - `{ exists: true }` si el usuario existe
+    - `{ exists: false }` si el usuario NO existe
+- **Errores:**
+  - 500: Error interno de servidor
+
 ---
 
 ## Notas generales
