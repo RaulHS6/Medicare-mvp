@@ -12,6 +12,16 @@ services:
     depends_on:
       - db
 
+  user-service:
+    build: ./backend/user-service
+    container_name: medicare-user-service
+    ports:
+      - "4002:4002"
+    env_file:
+      - ./backend/user-service/.env
+    depends_on:
+      - db
+
   api-gateway:
     build: ./backend/api-gateway
     container_name: medicare-api-gateway
@@ -21,6 +31,7 @@ services:
       - ./backend/api-gateway/.env
     depends_on:
       - auth-service
+      - user-service
 
   frontend:
     build: ./frontend/medicare-frontend
@@ -44,7 +55,8 @@ services:
       POSTGRES_DB: medicare_auth
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./backend/auth-service/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+      - ./backend/auth-service/init-db.sql:/docker-entrypoint-initdb.d/01-init-auth.sql:ro
+      - ./backend/user-service/init-db.sql:/docker-entrypoint-initdb.d/02-init-user.sql:ro
 
 volumes:
   db_data:
