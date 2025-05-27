@@ -19,7 +19,7 @@ function Register() {
   };
 
   return (
-    <div className="container mt-5">
+    <div>
       <h2>Registro</h2>
       {message && <div className="alert alert-info">{message}</div>}
       <form onSubmit={handleRegister}>
