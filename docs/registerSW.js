@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/Medicare-mvp/sw.js', { scope: '/Medicare-mvp/' })})}
